@@ -20,9 +20,11 @@ namespace CalculatorApp
                 "+" => FirstNumber + SecondNumber,
                 "-" => FirstNumber - SecondNumber,
                 "*" => FirstNumber * SecondNumber,
-                "/" => SecondNumber!=0 ? FirstNumber / SecondNumber : 0,
+                "/" => SecondNumber != 0 ? FirstNumber / SecondNumber : 0,
+                "^" => FirstNumber * FirstNumber,
+                "S" => Math.Sqrt(FirstNumber),
                 _ => 0,
-            };
+            }; ;
         }
 
     }

@@ -13,6 +13,7 @@ namespace CalculatorApp
         public ViewModel() {
             m_model = new Model();
             m_display = "0";
+            m_secondDisplay = "0";
             m_isOperatorClick = false;
 
             NumberCommand = new RelayCommand(OnNumberClick);
@@ -28,6 +29,16 @@ namespace CalculatorApp
             set { 
                 m_display = value;
                 OnPropertyChanged("DisplayText");
+            }
+        }
+
+        public string SecondDisplayText
+        {
+            get { return m_secondDisplay; }
+            set
+            {
+                m_secondDisplay = value;
+                OnPropertyChanged("SecondDisplayText");
             }
         }
         public bool IsOperatorClick
@@ -58,12 +69,25 @@ namespace CalculatorApp
         {
             m_operator = obj.ToString();
             m_model.Operator = m_operator;
+            if (m_operator == "S") 
+            { SecondDisplayText = "sqrt(" + m_model.FirstNumber.ToString() + ")"; }
+            else 
+            { SecondDisplayText = m_model.FirstNumber.ToString() + m_operator; }
             m_isOperatorClick = true;
         }
         private void OnCalculateClick(object obj)
         {
+            if(m_operator == null)
+            { return; }
+            if (m_operator == "^")
+            { SecondDisplayText += "2="; }
+            else if(m_operator == "S")
+            { SecondDisplayText += "="; }
+            else 
+            { SecondDisplayText += m_model.SecondNumber.ToString() + '='; }
             DisplayText = m_model.Calculate().ToString();
             m_model.FirstNumber=double.Parse(DisplayText);
+            m_operator = null;
         }
 
 
@@ -80,6 +104,7 @@ namespace CalculatorApp
         private Model m_model;
         private String m_display;
         private String m_operator;
+        private String m_secondDisplay;
         private bool m_isOperatorClick;
 
 
