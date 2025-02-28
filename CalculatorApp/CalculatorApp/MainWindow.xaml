@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:CalculatorApp"
         mc:Ignorable="d"
         Title="Calculator" Height="530" Width="330">
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -30,9 +33,9 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Button Grid.Row="0" Grid.Column="0" Content="%" Command="{Binding OperatorCommand}" CommandParameter="%"/>
-            <Button Grid.Row="0" Grid.Column="1" Content="CE" Command="{Binding OperatorCommand}" CommandParameter="CE"/>
-            <Button Grid.Row="0" Grid.Column="2" Content="C" Command="{Binding OperatorCommand}" CommandParameter="C"/>
-            <Button Grid.Row="0" Grid.Column="3" Content="&lt; " Command="{Binding OperatorCommand}" CommandParameter="R"/>
+            <Button Grid.Row="0" Grid.Column="1" Content="CE" Command="{Binding ClearCommand}" CommandParameter="CE"/>
+            <Button Grid.Row="0" Grid.Column="2" Content="C" Command="{Binding ClearCommand}" CommandParameter="C"/>
+            <Button Grid.Row="0" Grid.Column="3" Content="&lt; " Command="{Binding ClearCommand}" CommandParameter="R"/>
             
             <Button Grid.Row="1" Grid.Column="0" Content="1/x" Command="{Binding OperatorCommand}" CommandParameter="1/x"/>
             <Button Grid.Row="1" Grid.Column="1" Content="x²" Command="{Binding OperatorCommand}" CommandParameter="P"/>
@@ -57,7 +60,7 @@
             <Button Grid.Row="5" Grid.Column="0" Content="+/-" Command="{Binding OperatorCommand}" CommandParameter="+/-"/>
             <Button Grid.Row="5" Grid.Column="1" Content="0" Command="{Binding NumberCommand}" CommandParameter="0"/>
             <Button Grid.Row="5" Grid.Column="2" Content="        ." Command="{Binding OperatorCommand}" CommandParameter="."/>
-            <Button Grid.Row="5" Grid.Column="3" Content="=" Command="{Binding OperatorCommand}" CommandParameter="="/>
+            <Button Grid.Row="5" Grid.Column="3" Content="=" Command="{Binding CalculateCommand}"/>
         </Grid>
        
     </Grid>
