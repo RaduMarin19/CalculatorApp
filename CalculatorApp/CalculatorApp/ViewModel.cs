@@ -72,7 +72,7 @@ namespace CalculatorApp
                         m_expression = string.Empty;
                     }
                     break;
-                case "R":
+                case "BS":
                     if (DisplayText.Length > 1)
                     {
                         DisplayText = DisplayText.Substring(0, DisplayText.Length - 1);
@@ -95,7 +95,7 @@ namespace CalculatorApp
 
             if (m_expression.Length > 0 && "+-*/^".Contains(m_expression[^1]))
             {
-                m_expression = m_expression.Substring(0, m_expression.Length) + op;
+                m_expression = m_expression.Substring(0, m_expression.Length-1) + op;
                 SecondDisplayText = m_expression;
             }
             else

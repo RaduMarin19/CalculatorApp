@@ -37,7 +37,7 @@
             <Button Grid.Row="0" Grid.Column="0" Content="%" Command="{Binding OperatorCommand}" CommandParameter="%"/>
             <Button Grid.Row="0" Grid.Column="1" Content="CE" Command="{Binding ClearCommand}" CommandParameter="CE"/>
             <Button Grid.Row="0" Grid.Column="2" Content="C" Command="{Binding ClearCommand}" CommandParameter="C"/>
-            <Button Grid.Row="0" Grid.Column="3" Content="⌫; " Command="{Binding ClearCommand}" CommandParameter="BS"/>
+            <Button Grid.Row="0" Grid.Column="3" Content="⌫" Command="{Binding ClearCommand}" CommandParameter="BS"/>
             
             <Button Grid.Row="1" Grid.Column="0" Content="1/x" Command="{Binding OperatorCommand}" CommandParameter="1/x"/>
             <Button Grid.Row="1" Grid.Column="1" Content="x²" Command="{Binding OperatorCommand}" CommandParameter="^"/>

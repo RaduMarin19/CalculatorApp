@@ -9,7 +9,7 @@ namespace CalculatorApp
     {
         private static bool IsOperator(char c)
         {
-            return c == '^' || c == '*' || c == '/' || c == '+' || c == '-';
+            return c == '^' || c == '*' || c == '/' || c == '+' || c == '-' || c=='%';
         }
 
         private static bool IsValidCharacter(char c)
@@ -44,7 +44,7 @@ namespace CalculatorApp
             return c switch
             {
                 '^' => 5,
-                '*' or '/' => 3,
+                '*' or '/' or '%' => 3,
                 '+' or '-' => 2,
                 '(' => 0,
                 _ => -1
@@ -113,6 +113,7 @@ namespace CalculatorApp
                 '*' => operand1 * operand2,
                 '/' => operand2 != 0 ? operand1 / operand2 : throw new DivideByZeroException("Division by zero"),
                 '^' => Math.Pow(operand1, operand2),
+                '%'=> operand2 != 0 ? operand1 % operand2 : throw new DivideByZeroException("Division(modulo) by zero"),
                 _ => 0
             };
         }
