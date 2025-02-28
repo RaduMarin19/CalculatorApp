@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +14,13 @@ namespace CalculatorApp
         public ViewModel() {
             m_model = new Model();
             m_display = "0";
-            m_secondDisplay = "0";
+            m_secondDisplay = string.Empty;
             m_isOperatorClick = false;
 
             NumberCommand = new RelayCommand(OnNumberClick);
             ClearCommand = new RelayCommand(OnClearClick);
             OperatorCommand = new RelayCommand(OnOperatorClick);
             CalculateCommand = new RelayCommand(OnCalculateClick);
-
         }
 
         public string DisplayText
@@ -28,17 +28,24 @@ namespace CalculatorApp
             get { return m_display; }
             set { 
                 m_display = value;
-                OnPropertyChanged("DisplayText");
+                OnPropertyChanged(nameof(DisplayText));
             }
         }
-
+        public string ClearOption
+        {
+            get { return m_clearOption; }
+            set {
+                m_clearOption = value;
+                OnPropertyChanged(nameof(ClearOption));
+            }
+        }
         public string SecondDisplayText
         {
             get { return m_secondDisplay; }
             set
             {
                 m_secondDisplay = value;
-                OnPropertyChanged("SecondDisplayText");
+                OnPropertyChanged(nameof(SecondDisplayText));
             }
         }
         public bool IsOperatorClick
@@ -60,10 +67,34 @@ namespace CalculatorApp
         }
         private void OnClearClick(object obj)
         {
-            DisplayText = "0";
-            m_model.FirstNumber = 0;
-            m_model.SecondNumber = 0;
-            m_operator = null;
+            m_clearOption = obj.ToString();
+            switch (m_clearOption)
+            {
+                case "C":
+                    DisplayText = "0";
+                    SecondDisplayText = string.Empty;
+                    m_model.FirstNumber = 0;
+                    m_model.SecondNumber = 0;
+                    m_operator = null;
+                    break;
+                case "CE":
+                    DisplayText = "0";
+                    if(m_model.SecondNumber != 0)
+                    {
+                        m_model.SecondNumber = 0;
+                    }
+                    else
+                    {
+                        m_model.FirstNumber = 0;
+                        m_operator = null;
+                        SecondDisplayText= string.Empty;
+                    }
+                    break;
+                case "R":
+                    break;
+                default:
+                    break;
+            }
         }
         private void OnOperatorClick(object obj)
         {
@@ -87,6 +118,7 @@ namespace CalculatorApp
             { SecondDisplayText += m_model.SecondNumber.ToString() + '='; }
             DisplayText = m_model.Calculate().ToString();
             m_model.FirstNumber=double.Parse(DisplayText);
+            m_model.SecondNumber = 0;
             m_operator = null;
         }
 
@@ -105,6 +137,7 @@ namespace CalculatorApp
         private String m_display;
         private String m_operator;
         private String m_secondDisplay;
+        private String m_clearOption;
         private bool m_isOperatorClick;
 
 
