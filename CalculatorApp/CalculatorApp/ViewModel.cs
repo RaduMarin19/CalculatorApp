@@ -16,6 +16,7 @@ namespace CalculatorApp
             m_expression = string.Empty;
             m_mode = "Standard";
             m_isOperatorClick = false;
+            m_isEqualClick = false;
 
             NumberCommand = new RelayCommand(OnNumberClick);
             ClearCommand = new RelayCommand(OnClearClick);
@@ -55,6 +56,12 @@ namespace CalculatorApp
 
         private void OnNumberClick(object obj)
         {
+            if (m_isEqualClick == true)
+            {
+                DisplayText = string.Empty;
+                m_expression = string.Empty;
+                SecondDisplayText = string.Empty;
+            }
             if (m_isOperatorClick || DisplayText == "0")
             {
                 DisplayText = string.Empty;
@@ -63,6 +70,7 @@ namespace CalculatorApp
             DisplayText += obj?.ToString();
             m_expression += obj?.ToString();
             m_isOperatorClick = false;
+            m_isEqualClick = false;
         }
 
         private void OnClearClick(object obj)
@@ -106,20 +114,16 @@ namespace CalculatorApp
 
             if (m_expression.Length > 0 && "+-*/^%~√⅟".Contains(m_expression[^1]))
             {
-                m_expression = m_expression.Substring(0, m_expression.Length-1) + op;
-                SecondDisplayText = m_expression;
+                m_expression = m_expression.Substring(0, m_expression.Length-1);
             }
-            else
+            if(m_expression.Length > 0 && m_expression.Any(c => "+-*/^%~√⅟".Contains(c)))
             {
-                if(m_expression.Any(c => "+-*/^%~√⅟".Contains(c)))
-                {
-                    OnCalculateClick(obj);
-                }
-                m_expression += op;
-                SecondDisplayText = m_expression;
+                OnCalculateClick(obj);
             }
-
+            SecondDisplayText = m_expression + op;
+            m_expression += op;
             m_isOperatorClick = true;
+            m_isEqualClick = false;
         }
         private void OnClickChangeMode(object obj)
         {
@@ -147,6 +151,7 @@ namespace CalculatorApp
                 DisplayText = "Error";
                 Console.WriteLine(ex.Message);
             }
+            m_isEqualClick  = true;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -166,5 +171,6 @@ namespace CalculatorApp
         private string m_expression;
         private string m_mode;
         private bool m_isOperatorClick;
+        private bool m_isEqualClick;
     }
 }
