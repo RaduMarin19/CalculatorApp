@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace CalculatorApp
@@ -27,8 +28,18 @@ namespace CalculatorApp
             CalculateCommand = new RelayCommand(OnCalculateClick);
             ChangeMode = new RelayCommand(OnClickChangeMode);
             MemoryCommand = new RelayCommand(OnMemoryClick);
+            RecallMemoryCommand = new RelayCommand(OnRecallMemory);
         }
         public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
+        public double SelectedMemoryValue
+        {
+            get { return m_selectedMemoryValue; }
+            set
+            {
+                m_selectedMemoryValue = value;
+                OnPropertyChanged(nameof(SelectedMemoryValue));
+            }
+        }
 
         public string Mode
         {
@@ -77,7 +88,6 @@ namespace CalculatorApp
             m_isOperatorClick = false;
             m_isEqualClick = false;
         }
-
         private void OnClearClick(object obj)
         {
             string clearOption = obj.ToString();
@@ -200,10 +210,20 @@ namespace CalculatorApp
                     m_calculatorMemory.ClearMemory();
                     break;
                 case "MS":
-                    if (m_calculatorMemory.RecallLast().ToString() != DisplayText)
-                        m_calculatorMemory.AddToMemory(double.Parse(DisplayText));
+                    m_calculatorMemory.AddToMemory(double.Parse(DisplayText));
+                    break;
+                default:
+                    m_calculatorMemory.RemoveElement(double.Parse(DisplayText));
                     break;
             }
+        }
+        private void OnRecallMemory(object obj)
+        {
+            string val = obj.ToString();
+
+            DisplayText = val;
+            m_expression = val;
+            SecondDisplayText = string.Empty;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -218,6 +238,7 @@ namespace CalculatorApp
         public ICommand CalculateCommand { get; set; }
         public ICommand ChangeMode { get; set; }
         public ICommand MemoryCommand { get; set; }
+        public ICommand RecallMemoryCommand { get; set; }
 
         private CalculatorMemory m_calculatorMemory;
         private string m_display;
@@ -226,5 +247,6 @@ namespace CalculatorApp
         private string m_mode;
         private bool m_isOperatorClick;
         private bool m_isEqualClick;
+        private double m_selectedMemoryValue;
     }
 }

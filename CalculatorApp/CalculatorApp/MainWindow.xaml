@@ -56,15 +56,23 @@
                 <Button Grid.Row="0" Grid.Column="2" Content="M+" Command="{Binding MemoryCommand}" CommandParameter="M+"/>
                 <Button Grid.Row="0" Grid.Column="3" Content="M-" Command="{Binding MemoryCommand}" CommandParameter="M-"/>
                 <Button Grid.Row="0" Grid.Column="4" Content="MS" Command="{Binding MemoryCommand}" CommandParameter="MS"/>
-
-
                 <Expander Grid.Row="0" Grid.Column="5" Name="M" 
-                 Header="Memory" HorizontalAlignment="Center"
-                 ExpandDirection="Down" IsExpanded="False" Width="67">
-                    <ScrollViewer Height="100">
-                        <ListBox ItemsSource="{Binding MemoryValues}" />
-                    </ScrollViewer>
+                          Header="Memory" HorizontalAlignment="Center"
+                          ExpandDirection="Down" IsExpanded="False" Width="Auto">
+                    <ListBox ItemsSource="{Binding MemoryValues}" SelectedItem="{Binding SelectedMemoryValue, Mode=TwoWay}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                                    <Button Content="MR" Command="{Binding DataContext.RecallMemoryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Expander>
+
+
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>

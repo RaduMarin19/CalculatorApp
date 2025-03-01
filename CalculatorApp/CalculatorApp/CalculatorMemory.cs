@@ -17,6 +17,10 @@ namespace CalculatorApp
         {
             get { return m_memoryValues; }
         }
+        public void RemoveElement(double value) 
+        {
+            m_memoryValues.Remove(value);
+        }
         public void RemoveLast()
         {
             if (m_memoryValues.Count == 0)
