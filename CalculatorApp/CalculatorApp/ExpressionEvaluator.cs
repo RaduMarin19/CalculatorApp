@@ -9,7 +9,7 @@ namespace CalculatorApp
     {
         private static bool IsOperator(char c)
         {
-            return c == '^' || c == '*' || c == '/' || c == '+' || c == '-' || c=='%' || c=='S' || c=='N';
+            return c == '^' || c == '*' || c == '/' || c == '+' || c == '-' || c=='%' || c== '√' || c== '~' || c == '⅟';
         }
 
         private static bool IsValidCharacter(char c)
@@ -43,7 +43,7 @@ namespace CalculatorApp
         {
             return c switch
             {
-                '^' or 'S' or 'N' => 5,
+                '^' or '√' or '~' or '⅟' => 5,
                 '*' or '/' or '%' => 3,
                 '+' or '-' => 2,
                 '(' => 0,
@@ -122,8 +122,9 @@ namespace CalculatorApp
         {
             return op switch
             {
-                'N' => -operand,
-                'S' => Math.Sqrt(operand),
+                '⅟' => 1/operand,
+                '~' => -operand,
+                '√' => Math.Sqrt(operand),
                 '^' => Math.Pow(operand, 2),
                 _ => 0
             };
@@ -139,14 +140,13 @@ namespace CalculatorApp
                 {
                     stack.Push(number);
                 }
-                else if (IsOperator(token[0]) && stack.Count >= 1)
+                else if (IsOperator(token[0]) && stack.Count >= 1 && (token[0] == '^' || token[0] == '√' || token[0] == '~' || token[0] == '⅟'))
                 {
-                    if (token[0]=='^' || token[0] == 'S' || token[0] == 'N')
-                    {
-                        double operand = stack.Pop();
-                        stack.Push(ApplyUnaryOperator(operand, token[0]));
-                        continue;
-                    }
+                    double operand = stack.Pop();
+                    stack.Push(ApplyUnaryOperator(operand, token[0]));
+                }
+                else if (IsOperator(token[0]) && stack.Count >= 2)
+                {
                     double operand2 = stack.Pop();
                     double operand1 = stack.Pop();
                     stack.Push(ApplyOperator(operand1, operand2, token[0]));

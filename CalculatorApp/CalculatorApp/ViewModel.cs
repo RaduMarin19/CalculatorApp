@@ -93,14 +93,14 @@ namespace CalculatorApp
         {
             string op = obj.ToString();
 
-            if (m_expression.Length > 0 && "+-*/^%NS".Contains(m_expression[^1]))
+            if (m_expression.Length > 0 && "+-*/^%~√⅟".Contains(m_expression[^1]))
             {
                 m_expression = m_expression.Substring(0, m_expression.Length-1) + op;
                 SecondDisplayText = m_expression;
             }
             else
             {
-                if(m_expression.Any(c => "+-*/^%NS".Contains(c)))
+                if(m_expression.Any(c => "+-*/^%~√⅟".Contains(c)))
                 {
                     OnCalculateClick(obj);
                 }
@@ -114,7 +114,7 @@ namespace CalculatorApp
         private void OnCalculateClick(object obj)
         {
             if (string.IsNullOrEmpty(m_expression) || 
-                !m_expression.Any(c => "+-*/^%SN".Contains(c)))
+                !m_expression.Any(c => "+-*/^%√~⅟".Contains(c)))
                 return;
             
             try
