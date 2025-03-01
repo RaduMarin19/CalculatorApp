@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -18,12 +19,16 @@ namespace CalculatorApp
             m_isOperatorClick = false;
             m_isEqualClick = false;
 
+            m_calculatorMemory = new CalculatorMemory();
+
             NumberCommand = new RelayCommand(OnNumberClick);
             ClearCommand = new RelayCommand(OnClearClick);
             OperatorCommand = new RelayCommand(OnOperatorClick);
             CalculateCommand = new RelayCommand(OnCalculateClick);
             ChangeMode = new RelayCommand(OnClickChangeMode);
+            MemoryCommand = new RelayCommand(OnMemoryClick);
         }
+        public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
 
         public string Mode
         {
@@ -158,6 +163,48 @@ namespace CalculatorApp
             }
             m_isEqualClick  = true;
         }
+        private void OnMemoryClick(object obj)
+        {
+            string action = obj.ToString();
+
+            switch (action)
+            {
+                case "M+":
+                    if (m_calculatorMemory.RecallLast() == 0)
+                    {
+                        m_calculatorMemory.RemoveLast();
+                        m_calculatorMemory.AddToMemory(double.Parse(DisplayText));
+                    }
+                    else
+                    {
+                        m_calculatorMemory.ChangeLast(double.Parse(DisplayText));
+                    }
+                    break;
+                case "M-":
+                    if (m_calculatorMemory.RecallLast() == 0)
+                    {
+                        m_calculatorMemory.RemoveLast();
+                        m_calculatorMemory.AddToMemory(-double.Parse(DisplayText));
+                    }
+                    else
+                    {
+                        m_calculatorMemory.ChangeLast(-double.Parse(DisplayText));
+                    }
+                    break;
+                case "MR":
+                    DisplayText = m_calculatorMemory.RecallLast().ToString();
+                    m_expression = DisplayText;
+                    SecondDisplayText = string.Empty;
+                    break;
+                case "MC":
+                    m_calculatorMemory.ClearMemory();
+                    break;
+                case "MS":
+                    if (m_calculatorMemory.RecallLast().ToString() != DisplayText)
+                        m_calculatorMemory.AddToMemory(double.Parse(DisplayText));
+                    break;
+            }
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged(string propertyName)
@@ -170,7 +217,9 @@ namespace CalculatorApp
         public ICommand ClearCommand { get; set; }
         public ICommand CalculateCommand { get; set; }
         public ICommand ChangeMode { get; set; }
+        public ICommand MemoryCommand { get; set; }
 
+        private CalculatorMemory m_calculatorMemory;
         private string m_display;
         private string m_secondDisplay;
         private string m_expression;

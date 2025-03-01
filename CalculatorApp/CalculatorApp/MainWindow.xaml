@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CalculatorApp"
         mc:Ignorable="d"
-        Title="Calculator" Height="530" Width="330">
+        Title="Calculator" Height="530" Width="400">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -51,14 +51,20 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Row="0" Grid.Column="0" Content="MC" Command="{Binding OperatorCommand}" CommandParameter="%"/>
-                <Button Grid.Row="0" Grid.Column="1" Content="MR" Command="{Binding ClearCommand}" CommandParameter="CE"/>
-                <Button Grid.Row="0" Grid.Column="2" Content="M+" Command="{Binding ClearCommand}" CommandParameter="C"/>
-                <Button Grid.Row="0" Grid.Column="3" Content="M-" Command="{Binding ClearCommand}" CommandParameter="BS"/>
-                <Button Grid.Row="0" Grid.Column="4" Content="MS" Command="{Binding ClearCommand}" CommandParameter="BS"/>
+                <Button Grid.Row="0" Grid.Column="0" Content="MC" Command="{Binding MemoryCommand}" CommandParameter="MC"/>
+                <Button Grid.Row="0" Grid.Column="1" Content="MR" Command="{Binding MemoryCommand}" CommandParameter="MR"/>
+                <Button Grid.Row="0" Grid.Column="2" Content="M+" Command="{Binding MemoryCommand}" CommandParameter="M+"/>
+                <Button Grid.Row="0" Grid.Column="3" Content="M-" Command="{Binding MemoryCommand}" CommandParameter="M-"/>
+                <Button Grid.Row="0" Grid.Column="4" Content="MS" Command="{Binding MemoryCommand}" CommandParameter="MS"/>
+
+
                 <Expander Grid.Row="0" Grid.Column="5" Name="M" 
-                    HorizontalAlignment="Left"
-                    ExpandDirection="Right" IsExpanded="False" Width="100"/>
+                 Header="Memory" HorizontalAlignment="Center"
+                 ExpandDirection="Down" IsExpanded="False" Width="67">
+                    <ScrollViewer Height="100">
+                        <ListBox ItemsSource="{Binding MemoryValues}" />
+                    </ScrollViewer>
+                </Expander>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
