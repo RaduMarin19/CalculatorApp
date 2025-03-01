@@ -9,7 +9,7 @@ namespace CalculatorApp
     {
         private static bool IsOperator(char c)
         {
-            return c == '^' || c == '*' || c == '/' || c == '+' || c == '-' || c=='%';
+            return c == '^' || c == '*' || c == '/' || c == '+' || c == '-' || c=='%' || c=='S' || c=='N';
         }
 
         private static bool IsValidCharacter(char c)
@@ -43,7 +43,7 @@ namespace CalculatorApp
         {
             return c switch
             {
-                '^' => 5,
+                '^' or 'S' or 'N' => 5,
                 '*' or '/' or '%' => 3,
                 '+' or '-' => 2,
                 '(' => 0,
@@ -118,6 +118,17 @@ namespace CalculatorApp
             };
         }
 
+        private static double ApplyUnaryOperator(double operand,char op)
+        {
+            return op switch
+            {
+                'N' => -operand,
+                'S' => Math.Sqrt(operand),
+                '^' => Math.Pow(operand, 2),
+                _ => 0
+            };
+        }
+
         public static double EvaluateRPN(List<string> rpn)
         {
             Stack<double> stack = new Stack<double>();
@@ -128,8 +139,14 @@ namespace CalculatorApp
                 {
                     stack.Push(number);
                 }
-                else if (IsOperator(token[0]) && stack.Count >= 2)
+                else if (IsOperator(token[0]) && stack.Count >= 1)
                 {
+                    if (token[0]=='^' || token[0] == 'S' || token[0] == 'N')
+                    {
+                        double operand = stack.Pop();
+                        stack.Push(ApplyUnaryOperator(operand, token[0]));
+                        continue;
+                    }
                     double operand2 = stack.Pop();
                     double operand1 = stack.Pop();
                     stack.Push(ApplyOperator(operand1, operand2, token[0]));
