@@ -13,13 +13,29 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Expander Name="Settings" 
+          HorizontalAlignment="Left"
+          ExpandDirection="Right" IsExpanded="False" Width="100">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <Button Grid.Row ="0" Name="Standard" Content ="Standard" Command="{Binding ChangeMode}" CommandParameter="Standard"/>
+                    <Button Grid.Row ="1" Name="Programmer" Content ="Programmer" Command="{Binding ChangeMode}" CommandParameter="Programmer"/>
+                </StackPanel>
+            </Grid>
+        </Expander>
+        <TextBlock Grid.Row="0" Name="CalculatorMode" Text ="{Binding Mode}" FontSize= "10" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
+
+        <TextBlock Grid.Row="1" Name="SecondDisplayText" Text="{Binding SecondDisplayText}"  FontSize="17" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
+        <TextBlock Grid.Row="2" Name="DisplayText" Text="{Binding DisplayText}"  FontSize="30" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
         
-        <TextBlock Grid.Row="0" Name="SecondDisplayText" Text="{Binding SecondDisplayText}"  FontSize="17" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
-        <TextBlock Grid.Row="1" Name="DisplayText" Text="{Binding DisplayText}"  FontSize="30" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
-        
-        <Grid Grid.Row="2" Margin="10">
+        <Grid Grid.Row="3" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>

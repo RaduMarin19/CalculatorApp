@@ -14,12 +14,23 @@ namespace CalculatorApp
             m_display = "0";
             m_secondDisplay = string.Empty;
             m_expression = string.Empty;
+            m_mode = "Standard";
             m_isOperatorClick = false;
 
             NumberCommand = new RelayCommand(OnNumberClick);
             ClearCommand = new RelayCommand(OnClearClick);
             OperatorCommand = new RelayCommand(OnOperatorClick);
             CalculateCommand = new RelayCommand(OnCalculateClick);
+            ChangeMode = new RelayCommand(OnClickChangeMode);
+        }
+
+        public string Mode
+        {
+            get { return m_mode; }
+            set { 
+                m_mode = value;
+                OnPropertyChanged(nameof(Mode));
+            }
         }
 
         public string DisplayText
@@ -110,6 +121,10 @@ namespace CalculatorApp
 
             m_isOperatorClick = true;
         }
+        private void OnClickChangeMode(object obj)
+        {
+            Mode = obj.ToString();
+        }
 
         private void OnCalculateClick(object obj)
         {
@@ -144,10 +159,12 @@ namespace CalculatorApp
         public ICommand OperatorCommand { get; set; }
         public ICommand ClearCommand { get; set; }
         public ICommand CalculateCommand { get; set; }
+        public ICommand ChangeMode { get; set; }
 
         private string m_display;
         private string m_secondDisplay;
         private string m_expression;
+        private string m_mode;
         private bool m_isOperatorClick;
     }
 }
