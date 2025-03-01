@@ -116,7 +116,7 @@ namespace CalculatorApp
             {
                 m_expression = m_expression.Substring(0, m_expression.Length-1);
             }
-            if(m_expression.Length > 0 && m_expression.Any(c => "+-*/^%~√⅟".Contains(c)))
+            if (m_expression.Length > 0 && m_expression.Any(c => "+-*/^%~√⅟".Contains(c)) && m_mode == "Standard")
             {
                 OnCalculateClick(obj);
             }
@@ -124,6 +124,11 @@ namespace CalculatorApp
             m_expression += op;
             m_isOperatorClick = true;
             m_isEqualClick = false;
+            if (m_expression.Length > 1 && (op == "√" || op == "⅟" || op == "^" || op == "~"))
+            {
+                OnCalculateClick(obj);
+            }
+            
         }
         private void OnClickChangeMode(object obj)
         {
