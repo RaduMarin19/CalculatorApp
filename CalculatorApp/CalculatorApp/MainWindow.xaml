@@ -9,6 +9,12 @@
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Key="C" Modifiers="Control" Command="{Binding ClipboardCommand}" CommandParameter="Copy"/>
+        <KeyBinding Key="V" Modifiers="Control" Command="{Binding ClipboardCommand}" CommandParameter="Paste"/>
+        <KeyBinding Key="X" Modifiers="Control" Command="{Binding ClipboardCommand}" CommandParameter="Cut"/>
+        <KeyBinding Key="Enter" Command="{Binding CalculateCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -63,8 +69,7 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
-                                    <Button Content="MR" Command="{Binding DataContext.RecallMemoryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    <Button Content="{Binding}"  VerticalAlignment="Center" Width="Auto" Command="{Binding DataContext.RecallMemoryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                             CommandParameter="{Binding}" />
                                 </StackPanel>
                             </DataTemplate>

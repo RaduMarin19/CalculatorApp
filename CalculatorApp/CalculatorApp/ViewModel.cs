@@ -29,7 +29,10 @@ namespace CalculatorApp
             ChangeMode = new RelayCommand(OnClickChangeMode);
             MemoryCommand = new RelayCommand(OnMemoryClick);
             RecallMemoryCommand = new RelayCommand(OnRecallMemory);
+            ClipboardCommand = new RelayCommand(OnClipboardClick);
         }
+
+
         public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
         public double SelectedMemoryValue
         {
@@ -67,6 +70,27 @@ namespace CalculatorApp
             {
                 m_secondDisplay = value;
                 OnPropertyChanged(nameof(SecondDisplayText));
+            }
+        }
+        private void OnClipboardClick(object obj)
+        {
+            switch(obj.ToString())
+            {
+                case "Cut":
+                    CustomClipboard.Cut(ref m_display);
+                    OnPropertyChanged(nameof(DisplayText));
+                    m_expression = DisplayText;
+                    m_secondDisplay = DisplayText;
+                    break;
+                case "Paste":
+                    DisplayText = string.Empty;
+                    DisplayText += CustomClipboard.Paste();
+                    m_expression= DisplayText;
+                    m_secondDisplay = string.Empty; 
+                    break;
+                case "Copy":
+                    CustomClipboard.Copy(DisplayText);
+                    break;
             }
         }
 
@@ -213,7 +237,6 @@ namespace CalculatorApp
                     m_calculatorMemory.AddToMemory(double.Parse(DisplayText));
                     break;
                 default:
-                    m_calculatorMemory.RemoveElement(double.Parse(DisplayText));
                     break;
             }
         }
@@ -239,6 +262,7 @@ namespace CalculatorApp
         public ICommand ChangeMode { get; set; }
         public ICommand MemoryCommand { get; set; }
         public ICommand RecallMemoryCommand { get; set; }
+        public ICommand ClipboardCommand { get; set; }
 
         private CalculatorMemory m_calculatorMemory;
         private string m_display;
