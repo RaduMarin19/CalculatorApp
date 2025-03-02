@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CalculatorApp"
         mc:Ignorable="d"
-        Title="Calculator" Height="530" Width="400">
+        Title="Calculator" Height="530" Width="400"
+        ResizeMode="NoResize">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -53,6 +54,13 @@
         <KeyBinding Key="OemPeriod" Command="{Binding NumberCommand}" CommandParameter="."/>
 
         <KeyBinding Key="Enter" Command="{Binding CalculateCommand}"/>
+
+        <KeyBinding Key="Esc" Command="{Binding ClearCommand}" CommandParameter="C"/>
+
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding MemoryCommand}" CommandParameter="MS"/>
+        <KeyBinding Key="R" Modifiers="Control" Command="{Binding MemoryCommand}" CommandParameter="MR"/>
+        <KeyBinding Key="Add" Modifiers="Control" Command="{Binding MemoryCommand}" CommandParameter="M+"/>
+        <KeyBinding Key="Subtract" Modifiers="Control" Command="{Binding MemoryCommand}" CommandParameter="M-"/>
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
