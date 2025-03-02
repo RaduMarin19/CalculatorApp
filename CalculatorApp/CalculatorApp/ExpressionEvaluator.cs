@@ -120,6 +120,7 @@ namespace CalculatorApp
             {
                 '⅟' => 1 / operand,
                 '~' => -operand,
+                '^' => Math.Pow(operand,2),
                 '√' => Math.Sqrt(operand),
                 _ => throw new InvalidOperationException($"Unknown unary operator: {op}")
             };

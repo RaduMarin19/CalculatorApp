@@ -8,7 +8,6 @@ namespace CalculatorApp
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        private CalculatorKeyboard m_keyboardView;
         public ViewModel()
         {
             m_display = "0";
@@ -33,7 +32,7 @@ namespace CalculatorApp
             AboutRadu = new RelayCommand(OnRaduClick);
             ChangeBase = new RelayCommand(OnChangeBaseClick, CanChangeBase);
         }
-
+        public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
         public CalculatorKeyboard KeyboardView
         {
             get { return m_keyboardView; }
@@ -43,8 +42,6 @@ namespace CalculatorApp
                 OnPropertyChanged(nameof(KeyboardView));
             }
         }
-
-        public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
         public double SelectedMemoryValue
         {
             get { return m_selectedMemoryValue; }
@@ -126,6 +123,7 @@ namespace CalculatorApp
         private void OnChangeBaseClick(object obj)
         {
             m_base = Convert.ToInt32(obj);
+            OnClearClick("C");
         }
         private void OnNumberClick(object obj)
         {
@@ -172,8 +170,6 @@ namespace CalculatorApp
 
             return true;
         }
-
-
         private void OnClearClick(object obj)
         {
             string clearOption = obj.ToString();
@@ -233,6 +229,7 @@ namespace CalculatorApp
         }
         private void OnClickChangeMode(object obj)
         {
+            OnClearClick("C");
             Mode = obj.ToString();
             if (Mode == "Programmer")
             {
@@ -336,6 +333,7 @@ namespace CalculatorApp
         public ICommand ChangeBase { get; set; }
 
         private CalculatorMemory m_calculatorMemory;
+        private CalculatorKeyboard m_keyboardView;
         private string m_display;
         private string m_secondDisplay;
         private string m_expression;
