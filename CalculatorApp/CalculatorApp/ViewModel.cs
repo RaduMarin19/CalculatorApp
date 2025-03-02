@@ -17,6 +17,7 @@ namespace CalculatorApp
             m_mode = Settings.Default.Mode.ToString();
             m_isOperatorClick = false;
             m_isEqualClick = false;
+            m_operationOrder = false;
             if (m_mode == "Standard")
                 m_base = 10;
             else if (int.TryParse(Settings.Default.CalcBase.ToString(), out int savedBase))
@@ -38,6 +39,7 @@ namespace CalculatorApp
             ClipboardCommand = new RelayCommand(OnClipboardClick);
             AboutRadu = new RelayCommand(OnRaduClick);
             ChangeBase = new RelayCommand(OnChangeBaseClick, CanChangeBase);
+            OperationOrderCommand = new RelayCommand(OnOperationOrderClick);
             OnClickChangeMode(m_mode);
             Console.WriteLine(m_base);
             OnChangeBaseClick(m_base);
@@ -50,6 +52,15 @@ namespace CalculatorApp
             {
                 m_keyboardView = value;
                 OnPropertyChanged(nameof(KeyboardView));
+            }
+        }
+        public bool OperationOrder
+        {
+            get { return m_operationOrder; }
+            set
+            {
+                m_operationOrder = value;
+                OnPropertyChanged(nameof(OperationOrder));
             }
         }
         public double SelectedMemoryValue
@@ -128,7 +139,10 @@ namespace CalculatorApp
         {
             MessageBox.Show("Marin Radu-Andrei, grupa 10LF332");
         }
-
+        private void OnOperationOrderClick(object obj)
+        {
+            OperationOrder = !m_operationOrder;
+        }
         private void OnChangeBaseClick(object obj)
         {
             Base = Convert.ToInt32(obj);
@@ -221,7 +235,7 @@ namespace CalculatorApp
             {
                 m_expression = m_expression.Substring(0, m_expression.Length-1);
             }
-            if (m_expression.Length > 0 && m_expression.Any(c => "+-*/^%~√⅟".Contains(c)))
+            if (m_expression.Length > 0 && m_expression.Any(c => "+-*/^%~√⅟".Contains(c)) && !m_operationOrder)
             {
                 OnCalculateClick(obj);
             }
@@ -229,7 +243,7 @@ namespace CalculatorApp
             m_expression += op;
             m_isOperatorClick = true;
             m_isEqualClick = false;
-            if (m_expression.Length > 1 && (op == "√" || op == "⅟" || op == "^" || op == "~"))
+            if (m_expression.Length > 1 && (op == "√" || op == "⅟" || op == "^" || op == "~") && !m_operationOrder)
             {
                 OnCalculateClick(obj);
             }
@@ -339,6 +353,7 @@ namespace CalculatorApp
         public ICommand RecallMemoryCommand { get; set; }
         public ICommand ClipboardCommand { get; set; }
         public ICommand ChangeBase { get; set; }
+        public ICommand OperationOrderCommand { get; set; }
 
         private CalculatorMemory m_calculatorMemory;
         private CalculatorKeyboard m_keyboardView;
@@ -349,6 +364,7 @@ namespace CalculatorApp
         private bool m_isOperatorClick;
         private bool m_isEqualClick;
         private bool m_digitGrouping;
+        private bool m_operationOrder;
         private double m_selectedMemoryValue;
         private int m_base;
     }

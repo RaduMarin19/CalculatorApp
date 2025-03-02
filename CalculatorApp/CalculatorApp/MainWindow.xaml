@@ -81,6 +81,7 @@
                     <MenuItem Header="Paste" Command="{Binding ClipboardCommand}" CommandParameter="Paste"/>
                     <MenuItem Header="Cut" Command="{Binding ClipboardCommand}" CommandParameter="Cut"/>
                     <MenuItem Header="Digit Grouping"/>
+                    <MenuItem Header="Operation Order" Command="{Binding OperationOrderCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Help">
                     <MenuItem Header="About" Command="{Binding AboutRadu}"/>
@@ -95,10 +96,18 @@
                     <MenuItem Header="10" Command="{Binding ChangeBase}" CommandParameter="10"/>
                     <MenuItem Header="16" Command="{Binding ChangeBase}" CommandParameter="16"/>
                 </MenuItem>
-                
+
             </Menu>
         </Grid>
-        <TextBlock Grid.Row="0" Name="CalculatorMode" Text ="{Binding Mode}" FontSize= "10" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Bold"/>
+        <TextBlock Grid.Row="0" Name="CalculatorMode" FontSize="10" 
+           VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Bold">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0}, {1}">
+                    <Binding Path="Mode"/>
+                    <Binding Path="OperationOrder"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
 
         <TextBlock Grid.Row="1" Name="SecondDisplayText" Text="{Binding SecondDisplayText}"  FontSize="17" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
         <TextBlock Grid.Row="2" Name="DisplayText" Text="{Binding DisplayText}"  FontSize="30" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
