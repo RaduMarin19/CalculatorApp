@@ -20,7 +20,7 @@ namespace CalculatorApp
             m_base = 10;
 
             m_calculatorMemory = new CalculatorMemory();
-            KeyboardView = new ProgrammerView();
+            KeyboardView = new StandardView();
 
             NumberCommand = new RelayCommand(OnNumberClick, CanExecuteNumber);
             ClearCommand = new RelayCommand(OnClearClick);
@@ -152,17 +152,27 @@ namespace CalculatorApp
         }
         private bool CanExecuteNumber(object parameter)
         {
+            string str = parameter.ToString();
+
+            if (str == ")" || str == "(")
+                return true;
+
             if (Mode == "Programmer")
             {
-                string number = parameter.ToString();
-                if (int.TryParse(number, out int digit))
+                if (Base <= 10)
                 {
-                    return digit < Base; 
+                    return char.IsDigit(str[0]) && (str[0] - '0') < Base;
                 }
-                return false;
+                else
+                {
+                    return (char.IsDigit(str[0]) && (str[0] - '0') < Base) ||
+                           (char.ToUpper(str[0]) >= 'A' && char.ToUpper(str[0]) < ('A' + (Base - 10)));
+                }
             }
+
             return true;
         }
+
 
         private void OnClearClick(object obj)
         {
