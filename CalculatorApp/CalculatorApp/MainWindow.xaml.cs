@@ -21,5 +21,11 @@ namespace CalculatorApp
         {
             InitializeComponent();
         }
+
+        private void ButtonEnter(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+            (DataContext as ViewModel).CalculateCommand.Execute(null);
+        }
     }
 }
