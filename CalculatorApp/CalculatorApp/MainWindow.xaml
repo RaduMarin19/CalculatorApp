@@ -85,6 +85,10 @@
                 <MenuItem Header="Help">
                     <MenuItem Header="About" Command="{Binding AboutRadu}"/>
                 </MenuItem>
+                <MenuItem Header="Change mode">
+                    <MenuItem Header="Standard" Command="{Binding ChangeMode}" CommandParameter="Standard"/>
+                    <MenuItem Header="Programmer" Command="{Binding ChangeMode}" CommandParameter="Programmer"/>
+                </MenuItem>
                 
             </Menu>
         </Grid>
