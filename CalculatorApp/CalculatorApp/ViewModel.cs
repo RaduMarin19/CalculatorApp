@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -30,8 +31,8 @@ namespace CalculatorApp
             MemoryCommand = new RelayCommand(OnMemoryClick);
             RecallMemoryCommand = new RelayCommand(OnRecallMemory);
             ClipboardCommand = new RelayCommand(OnClipboardClick);
+            AboutRadu = new RelayCommand(OnRaduClick);
         }
-
 
         public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
         public double SelectedMemoryValue
@@ -79,19 +80,24 @@ namespace CalculatorApp
                 case "Cut":
                     CustomClipboard.Cut(ref m_display);
                     OnPropertyChanged(nameof(DisplayText));
-                    m_expression = DisplayText;
-                    m_secondDisplay = DisplayText;
+                    m_expression = string.Empty;
+                    SecondDisplayText = string.Empty;
+                    DisplayText = "0";
                     break;
                 case "Paste":
                     DisplayText = string.Empty;
                     DisplayText += CustomClipboard.Paste();
                     m_expression= DisplayText;
-                    m_secondDisplay = string.Empty; 
+                    m_secondDisplay = string.Empty;
                     break;
                 case "Copy":
                     CustomClipboard.Copy(DisplayText);
                     break;
             }
+        }
+        private void OnRaduClick(object obj)
+        {
+            MessageBox.Show("Marin Radu-Andrei, grupa 10LF332");
         }
 
         private void OnNumberClick(object obj)
@@ -260,6 +266,7 @@ namespace CalculatorApp
         public ICommand ClearCommand { get; set; }
         public ICommand CalculateCommand { get; set; }
         public ICommand ChangeMode { get; set; }
+        public ICommand AboutRadu {  get; set; }
         public ICommand MemoryCommand { get; set; }
         public ICommand RecallMemoryCommand { get; set; }
         public ICommand ClipboardCommand { get; set; }

@@ -69,20 +69,25 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Expander Name="Settings" 
-          HorizontalAlignment="Left"
-          ExpandDirection="Right" IsExpanded="False" Width="100">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <StackPanel>
-                    <Button Grid.Row ="0" Name="Standard" Content ="Standard" Command="{Binding ChangeMode}" CommandParameter="Standard"/>
-                    <Button Grid.Row ="1" Name="Programmer" Content ="Programmer" Command="{Binding ChangeMode}" CommandParameter="Programmer"/>
-                </StackPanel>
-            </Grid>
-        </Expander>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Menu Grid.Row="0" Height="20">
+                <MenuItem Header="File">
+                    <MenuItem Header="Copy" Command="{Binding ClipboardCommand}" CommandParameter="Copy"/>
+                    <MenuItem Header="Paste" Command="{Binding ClipboardCommand}" CommandParameter="Paste"/>
+                    <MenuItem Header="Cut" Command="{Binding ClipboardCommand}" CommandParameter="Cut"/>
+                    <MenuItem Header="Digit Grouping"/>
+                </MenuItem>
+                <MenuItem Header="Help">
+                    <MenuItem Header="About" Command="{Binding AboutRadu}"/>
+                </MenuItem>
+                
+            </Menu>
+        </Grid>
         <TextBlock Grid.Row="0" Name="CalculatorMode" Text ="{Binding Mode}" FontSize= "10" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
 
         <TextBlock Grid.Row="1" Name="SecondDisplayText" Text="{Binding SecondDisplayText}"  FontSize="17" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
