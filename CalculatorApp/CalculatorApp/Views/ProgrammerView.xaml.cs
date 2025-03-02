@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CalculatorApp.UserControls
+namespace CalculatorApp.Views
 {
     /// <summary>
-    /// Interaction logic for StandardCalculator.xaml
+    /// Interaction logic for ProgrammerView.xaml
     /// </summary>
-    public partial class StandardCalculator : UserControl
+    public partial class ProgrammerView : CalculatorKeyboard
     {
-        public StandardCalculator()
+        public ProgrammerView()
         {
             InitializeComponent();
         }

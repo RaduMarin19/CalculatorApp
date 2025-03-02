@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using CalculatorApp.Views;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -7,6 +8,7 @@ namespace CalculatorApp
 {
     public class ViewModel : INotifyPropertyChanged
     {
+        private CalculatorKeyboard m_keyboardView;
         public ViewModel()
         {
             m_display = "0";
@@ -18,6 +20,7 @@ namespace CalculatorApp
             m_base = 10;
 
             m_calculatorMemory = new CalculatorMemory();
+            KeyboardView = new ProgrammerView();
 
             NumberCommand = new RelayCommand(OnNumberClick, CanExecuteNumber);
             ClearCommand = new RelayCommand(OnClearClick);
@@ -28,6 +31,17 @@ namespace CalculatorApp
             RecallMemoryCommand = new RelayCommand(OnRecallMemory);
             ClipboardCommand = new RelayCommand(OnClipboardClick);
             AboutRadu = new RelayCommand(OnRaduClick);
+            ChangeBase = new RelayCommand(OnChangeBaseClick, CanChangeBase);
+        }
+
+        public CalculatorKeyboard KeyboardView
+        {
+            get { return m_keyboardView; }
+            set
+            {
+                m_keyboardView = value;
+                OnPropertyChanged(nameof(KeyboardView));
+            }
         }
 
         public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
@@ -45,10 +59,13 @@ namespace CalculatorApp
             get { return m_base; }
             set
             {
-                m_base = value;
-                OnPropertyChanged(nameof(Base));
+                if (m_base != value)
+                {
+                    m_base = value;
+                    OnPropertyChanged(nameof(Base));
 
-                ((RelayCommand)NumberCommand).RaiseCanExecuteChanged();
+                    ((RelayCommand)NumberCommand).RaiseCanExecuteChanged();
+                }
             }
         }
         public string Mode
@@ -105,6 +122,11 @@ namespace CalculatorApp
         {
             MessageBox.Show("Marin Radu-Andrei, grupa 10LF332");
         }
+
+        private void OnChangeBaseClick(object obj)
+        {
+            m_base = Convert.ToInt32(obj);
+        }
         private void OnNumberClick(object obj)
         {
             if (m_isEqualClick == true)
@@ -123,15 +145,25 @@ namespace CalculatorApp
             m_isOperatorClick = false;
             m_isEqualClick = false;
         }
+
+        private bool CanChangeBase(object parameter)
+        {
+            return m_mode == "Programmer";
+        }
         private bool CanExecuteNumber(object parameter)
         {
-            if (m_mode == "Programmer" && m_base == 2)
+            if (Mode == "Programmer")
             {
                 string number = parameter.ToString();
-                return number == "0" || number == "1";
+                if (int.TryParse(number, out int digit))
+                {
+                    return digit < Base; 
+                }
+                return false;
             }
             return true;
         }
+
         private void OnClearClick(object obj)
         {
             string clearOption = obj.ToString();
@@ -194,11 +226,11 @@ namespace CalculatorApp
             Mode = obj.ToString();
             if (Mode == "Programmer")
             {
-                Base = 2;
+                KeyboardView = new ProgrammerView();
             }
-            else
+            else if (Mode == "Standard")
             {
-                Base = 10; 
+                KeyboardView = new StandardView();
             }
         }
         private void OnCalculateClick(object obj)
@@ -291,6 +323,7 @@ namespace CalculatorApp
         public ICommand MemoryCommand { get; set; }
         public ICommand RecallMemoryCommand { get; set; }
         public ICommand ClipboardCommand { get; set; }
+        public ICommand ChangeBase { get; set; }
 
         private CalculatorMemory m_calculatorMemory;
         private string m_display;

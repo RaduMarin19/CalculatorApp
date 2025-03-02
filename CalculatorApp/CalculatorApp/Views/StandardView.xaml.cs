@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CalculatorApp.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +14,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CalculatorApp.UserControls
+namespace CalculatorApp
 {
     /// <summary>
-    /// Interaction logic for ProgrammerCalculator.xaml
+    /// Interaction logic for StandardView.xaml
     /// </summary>
-    public partial class ProgrammerCalculator : UserControl
+    public partial class StandardView : CalculatorKeyboard
     {
-        public ProgrammerCalculator()
+        public StandardView()
         {
             InitializeComponent();
         }
