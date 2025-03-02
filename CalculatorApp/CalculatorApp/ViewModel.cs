@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using CalculatorApp.Properties;
 
 namespace CalculatorApp
 {
@@ -13,10 +14,16 @@ namespace CalculatorApp
             m_display = "0";
             m_secondDisplay = string.Empty;
             m_expression = string.Empty;
-            m_mode = "Standard";
+            m_mode = Settings.Default.Mode.ToString();
             m_isOperatorClick = false;
             m_isEqualClick = false;
-            m_base = 10;
+            if (m_mode == "Standard")
+                m_base = 10;
+            else if (int.TryParse(Settings.Default.CalcBase.ToString(), out int savedBase))
+                m_base = savedBase;
+            else
+                Base = 10;
+            m_digitGrouping = Settings.Default.DigitGrouping;
 
             m_calculatorMemory = new CalculatorMemory();
             KeyboardView = new StandardView();
@@ -31,6 +38,9 @@ namespace CalculatorApp
             ClipboardCommand = new RelayCommand(OnClipboardClick);
             AboutRadu = new RelayCommand(OnRaduClick);
             ChangeBase = new RelayCommand(OnChangeBaseClick, CanChangeBase);
+            OnClickChangeMode(m_mode);
+            Console.WriteLine(m_base);
+            OnChangeBaseClick(m_base);
         }
         public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
         public CalculatorKeyboard KeyboardView
@@ -56,13 +66,11 @@ namespace CalculatorApp
             get { return m_base; }
             set
             {
-                if (m_base != value)
-                {
-                    m_base = value;
-                    OnPropertyChanged(nameof(Base));
-
-                    ((RelayCommand)NumberCommand).RaiseCanExecuteChanged();
-                }
+                 m_base = value;
+                 OnPropertyChanged(nameof(Base));
+                 Settings.Default.CalcBase = m_base;
+                 Settings.Default.Save();
+                 ((RelayCommand)NumberCommand).RaiseCanExecuteChanged();
             }
         }
         public string Mode
@@ -70,6 +78,8 @@ namespace CalculatorApp
             get { return m_mode; }
             set { 
                 m_mode = value;
+                Settings.Default.Mode = value;
+                Settings.Default.Save();
                 OnPropertyChanged(nameof(Mode));
             }
         }
@@ -83,7 +93,6 @@ namespace CalculatorApp
                 OnPropertyChanged(nameof(DisplayText));
             }
         }
-
         public string SecondDisplayText
         {
             get { return m_secondDisplay; }
@@ -122,7 +131,7 @@ namespace CalculatorApp
 
         private void OnChangeBaseClick(object obj)
         {
-            m_base = Convert.ToInt32(obj);
+            Base = Convert.ToInt32(obj);
             OnClearClick("C");
         }
         private void OnNumberClick(object obj)
@@ -204,7 +213,6 @@ namespace CalculatorApp
                     break;
             }
         }
-
         private void OnOperatorClick(object obj)
         {
             string op = obj.ToString();
@@ -340,6 +348,7 @@ namespace CalculatorApp
         private string m_mode;
         private bool m_isOperatorClick;
         private bool m_isEqualClick;
+        private bool m_digitGrouping;
         private double m_selectedMemoryValue;
         private int m_base;
     }
