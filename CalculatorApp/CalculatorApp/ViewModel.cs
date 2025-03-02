@@ -252,12 +252,12 @@ namespace CalculatorApp
             try
             {
                 List<string> rpn = ExpressionEvaluator.ConvertToRPN(m_expression);
-                double result = ExpressionEvaluator.EvaluateRPN(rpn,m_base);
+                string result = ExpressionEvaluator.EvaluateRPN(rpn,m_base);
 
                 SecondDisplayText = m_expression + " =";
-                DisplayText = result.ToString();
+                DisplayText = result;
 
-                m_expression = result.ToString();
+                m_expression = result;
             }
             catch (Exception ex)
             {

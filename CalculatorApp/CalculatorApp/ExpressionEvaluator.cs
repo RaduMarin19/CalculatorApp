@@ -48,16 +48,18 @@ namespace CalculatorApp
                 _ => -1
             };
         }
-
         public static List<string> ConvertToRPN(string expression)
         {
             List<string> rpn = new List<string>();
             Stack<char> operatorStack = new Stack<char>();
             string number = "";
 
-            foreach (char c in expression)
+            for (int i = 0; i < expression.Length; i++)
             {
-                if (char.IsDigit(c) || c == '.' || (c == '-' && (number == "" || (rpn.Count > 0 && IsOperator(rpn.Last()[0])))))
+                char c = expression[i];
+
+                if (char.IsDigit(c) || c == '.' || (char.ToUpper(c) >= 'A' && char.ToUpper(c) <= 'F') ||
+                    (c == '-' && (number == "" || (rpn.Count > 0 && IsOperator(rpn.Last()[0])))))
                 {
                     number += c;
                 }
@@ -68,6 +70,7 @@ namespace CalculatorApp
                         rpn.Add(number);
                         number = "";
                     }
+
                     if (c == ')')
                     {
                         while (operatorStack.Count > 0 && operatorStack.Peek() != '(')
@@ -87,8 +90,10 @@ namespace CalculatorApp
                     }
                 }
             }
+                
             if (!string.IsNullOrEmpty(number))
                 rpn.Add(number);
+
             while (operatorStack.Count > 0)
                 rpn.Add(operatorStack.Pop().ToString());
 
@@ -119,14 +124,15 @@ namespace CalculatorApp
                 _ => throw new InvalidOperationException($"Unknown unary operator: {op}")
             };
         }
-
         private static int BaseKToBase10(string number, int baseK)
         {
             int result = 0, power = 1;
             for (int i = number.Length - 1; i >= 0; i--)
             {
                 int digit = char.IsDigit(number[i]) ? number[i] - '0' : char.ToUpper(number[i]) - 'A' + 10;
-                if (digit >= baseK) throw new ArgumentException($"Invalid digit '{number[i]}' for base {baseK}");
+                if (digit >= baseK)
+                    throw new ArgumentException($"Invalid digit '{number[i]}' for base {baseK}");
+
                 result += digit * power;
                 power *= baseK;
             }
@@ -137,6 +143,10 @@ namespace CalculatorApp
         {
             if (baseK < 2 || baseK > 36) throw new ArgumentException("Base must be between 2 and 36");
             if (number == 0) return "0";
+
+            bool isNegative = number < 0;
+            number = Math.Abs(number);
+
             string result = "";
             while (number > 0)
             {
@@ -145,19 +155,16 @@ namespace CalculatorApp
                 result = digit + result;
                 number /= baseK;
             }
-            return result;
-        }
 
-        public static double EvaluateRPN(List<string> rpn, int b)
+            return isNegative ? "-" + result : result;
+        }
+        public static string EvaluateRPN(List<string> rpn, int b)
         {
             Stack<double> stack = new Stack<double>();
+
             foreach (string token in rpn)
             {
-                if (double.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out double number))
-                {
-                    stack.Push(number);
-                }
-                else if (IsOperator(token[0]) && stack.Count >= 1 && "^√~⅟".Contains(token[0]))
+                if (IsOperator(token[0]) && stack.Count >= 1 && "^√~⅟".Contains(token[0]))
                 {
                     stack.Push(ApplyUnaryOperator(stack.Pop(), token[0]));
                 }
@@ -165,28 +172,29 @@ namespace CalculatorApp
                 {
                     double operand2 = stack.Pop();
                     double operand1 = stack.Pop();
-                    if (b != 10)
-                    {
-                        operand1 = BaseKToBase10(operand1.ToString(), b);
-                        operand2 = BaseKToBase10(operand2.ToString(), b);
-                    }
                     stack.Push(ApplyOperator(operand1, operand2, token[0]));
+                }
+                else if (b != 10 && token.All(c => char.IsDigit(c) || (char.ToUpper(c) >= 'A' && char.ToUpper(c) < ('A' + (b - 10)))))
+                {
+                    stack.Push(BaseKToBase10(token, b));
+                }
+                else if (double.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out double number))
+                {
+                    stack.Push(number);
                 }
                 else
                 {
                     throw new InvalidOperationException($"Invalid token: {token}");
                 }
             }
-            if (b == 10)
-            {
-                return stack.Pop();
-            }
-            else
-            {
-                if (double.TryParse(Base10ToBaseK((int)stack.Pop(), b), NumberStyles.Any, CultureInfo.InvariantCulture, out double number))
-                    return number;
-                return 0;
-            }
+
+            if (stack.Count != 1)
+                throw new InvalidOperationException("Invalid expression");
+
+            double result = stack.Pop();
+
+            return b == 10 ? result.ToString() : Base10ToBaseK((int)result, b);
         }
+
     }
 }
