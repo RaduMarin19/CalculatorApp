@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace CalculatorApp
@@ -20,10 +15,11 @@ namespace CalculatorApp
             m_mode = "Standard";
             m_isOperatorClick = false;
             m_isEqualClick = false;
+            m_base = 10;
 
             m_calculatorMemory = new CalculatorMemory();
 
-            NumberCommand = new RelayCommand(OnNumberClick);
+            NumberCommand = new RelayCommand(OnNumberClick, CanExecuteNumber);
             ClearCommand = new RelayCommand(OnClearClick);
             OperatorCommand = new RelayCommand(OnOperatorClick);
             CalculateCommand = new RelayCommand(OnCalculateClick);
@@ -44,7 +40,17 @@ namespace CalculatorApp
                 OnPropertyChanged(nameof(SelectedMemoryValue));
             }
         }
+        public int Base
+        {
+            get { return m_base; }
+            set
+            {
+                m_base = value;
+                OnPropertyChanged(nameof(Base));
 
+                ((RelayCommand)NumberCommand).RaiseCanExecuteChanged();
+            }
+        }
         public string Mode
         {
             get { return m_mode; }
@@ -99,7 +105,6 @@ namespace CalculatorApp
         {
             MessageBox.Show("Marin Radu-Andrei, grupa 10LF332");
         }
-
         private void OnNumberClick(object obj)
         {
             if (m_isEqualClick == true)
@@ -108,7 +113,7 @@ namespace CalculatorApp
                 m_expression = string.Empty;
                 SecondDisplayText = string.Empty;
             }
-            if (m_isOperatorClick || DisplayText == "0")
+            if (m_isOperatorClick || (DisplayText == "0" && true))
             {
                 DisplayText = string.Empty;
             }
@@ -117,6 +122,15 @@ namespace CalculatorApp
             m_expression += obj?.ToString();
             m_isOperatorClick = false;
             m_isEqualClick = false;
+        }
+        private bool CanExecuteNumber(object parameter)
+        {
+            if (m_mode == "Programmer" && m_base == 2)
+            {
+                string number = parameter.ToString();
+                return number == "0" || number == "1";
+            }
+            return true;
         }
         private void OnClearClick(object obj)
         {
@@ -161,7 +175,7 @@ namespace CalculatorApp
             {
                 m_expression = m_expression.Substring(0, m_expression.Length-1);
             }
-            if (m_expression.Length > 0 && m_expression.Any(c => "+-*/^%~√⅟".Contains(c)) && m_mode == "Standard")
+            if (m_expression.Length > 0 && m_expression.Any(c => "+-*/^%~√⅟".Contains(c)))
             {
                 OnCalculateClick(obj);
             }
@@ -178,8 +192,15 @@ namespace CalculatorApp
         private void OnClickChangeMode(object obj)
         {
             Mode = obj.ToString();
+            if (Mode == "Programmer")
+            {
+                Base = 2;
+            }
+            else
+            {
+                Base = 10; 
+            }
         }
-
         private void OnCalculateClick(object obj)
         {
             if (string.IsNullOrEmpty(m_expression) || 
@@ -189,12 +210,12 @@ namespace CalculatorApp
             try
             {
                 List<string> rpn = ExpressionEvaluator.ConvertToRPN(m_expression);
-                double result = ExpressionEvaluator.EvaluateRPN(rpn);
+                double result = ExpressionEvaluator.EvaluateRPN(rpn,m_base);
 
                 SecondDisplayText = m_expression + " =";
                 DisplayText = result.ToString();
 
-                m_expression = result.ToString(); 
+                m_expression = result.ToString();
             }
             catch (Exception ex)
             {
@@ -279,5 +300,6 @@ namespace CalculatorApp
         private bool m_isOperatorClick;
         private bool m_isEqualClick;
         private double m_selectedMemoryValue;
+        private int m_base;
     }
 }
