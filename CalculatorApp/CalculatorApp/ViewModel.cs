@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using CalculatorApp.Properties;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
 
 namespace CalculatorApp
 {
@@ -40,8 +43,8 @@ namespace CalculatorApp
             AboutRadu = new RelayCommand(OnRaduClick);
             ChangeBase = new RelayCommand(OnChangeBaseClick, CanChangeBase);
             OperationOrderCommand = new RelayCommand(OnOperationOrderClick);
+            DigitGrouping = new RelayCommand(OnDigitGroupingClick);
             OnClickChangeMode(m_mode);
-            Console.WriteLine(m_base);
             OnChangeBaseClick(m_base);
         }
         public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
@@ -94,6 +97,17 @@ namespace CalculatorApp
                 OnPropertyChanged(nameof(Mode));
             }
         }
+        public string FormattedDisplayText
+        {
+            get
+            {
+                if (m_digitGrouping && decimal.TryParse(m_display, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal number))
+                {
+                    return number.ToString("#,0.############################", CultureInfo.CurrentCulture);
+                }
+                return m_display;
+            }
+        }
 
         public string DisplayText
         {
@@ -102,16 +116,33 @@ namespace CalculatorApp
             {
                 m_display = value;
                 OnPropertyChanged(nameof(DisplayText));
+                OnPropertyChanged(nameof(FormattedDisplayText)); 
             }
         }
         public string SecondDisplayText
         {
-            get { return m_secondDisplay; }
+            get { return m_digitGrouping? FormatExpression(m_secondDisplay) : m_secondDisplay; }
             set
             {
                 m_secondDisplay = value;
                 OnPropertyChanged(nameof(SecondDisplayText));
             }
+        }
+        private string FormatExpression(string expression)
+        {
+            if (string.IsNullOrEmpty(expression))
+                return string.Empty;
+
+            string pattern = @"\d+([.,]\d+)?";
+
+            return Regex.Replace(expression, pattern, match =>
+            {
+                if (decimal.TryParse(match.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal number))
+                {
+                    return number.ToString("#,0.############################", CultureInfo.CurrentCulture); 
+                }
+                return match.Value;
+            });
         }
         private void OnClipboardClick(object obj)
         {
@@ -134,6 +165,14 @@ namespace CalculatorApp
                     CustomClipboard.Copy(DisplayText);
                     break;
             }
+        }
+
+        private void OnDigitGroupingClick(object obj)
+        {
+            m_digitGrouping = !m_digitGrouping;
+            Settings.Default.DigitGrouping = m_digitGrouping;
+            Settings.Default.Save();
+            OnPropertyChanged(nameof(FormattedDisplayText));
         }
         private void OnRaduClick(object obj)
         {
@@ -354,6 +393,7 @@ namespace CalculatorApp
         public ICommand ClipboardCommand { get; set; }
         public ICommand ChangeBase { get; set; }
         public ICommand OperationOrderCommand { get; set; }
+        public ICommand DigitGrouping {  get; set; }
 
         private CalculatorMemory m_calculatorMemory;
         private CalculatorKeyboard m_keyboardView;

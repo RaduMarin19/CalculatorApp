@@ -80,7 +80,7 @@
                     <MenuItem Header="Copy" Command="{Binding ClipboardCommand}" CommandParameter="Copy"/>
                     <MenuItem Header="Paste" Command="{Binding ClipboardCommand}" CommandParameter="Paste"/>
                     <MenuItem Header="Cut" Command="{Binding ClipboardCommand}" CommandParameter="Cut"/>
-                    <MenuItem Header="Digit Grouping"/>
+                    <MenuItem Header="Digit Grouping" Command="{Binding DigitGrouping}"/>
                     <MenuItem Header="Operation Order" Command="{Binding OperationOrderCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Help">
@@ -110,7 +110,7 @@
         </TextBlock>
 
         <TextBlock Grid.Row="1" Name="SecondDisplayText" Text="{Binding SecondDisplayText}"  FontSize="17" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
-        <TextBlock Grid.Row="2" Name="DisplayText" Text="{Binding DisplayText}"  FontSize="30" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
+        <TextBlock Grid.Row="2" Name="DisplayText" Text="{Binding FormattedDisplayText}"  FontSize="30" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
         <Grid Grid.Row="3" Margin ="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
