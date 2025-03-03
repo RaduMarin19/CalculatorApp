@@ -1,11 +1,11 @@
-﻿using CalculatorApp.Views;
+﻿using CalculatorApp.Properties;
+using CalculatorApp.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
-using CalculatorApp.Properties;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Input;
 
 
 namespace CalculatorApp
@@ -55,6 +55,56 @@ namespace CalculatorApp
             {
                 m_keyboardView = value;
                 OnPropertyChanged(nameof(KeyboardView));
+            }
+        }
+        public string HexValue
+        {
+            get
+            {
+                string number = m_display;
+                if (m_base != 10)
+                {
+                    number = ExpressionEvaluator.BaseKToBase10(number, m_base).ToString();
+                }
+                return ExpressionEvaluator.Base10ToBaseK(Convert.ToInt32(number), 16).ToUpper();
+            }
+        }
+
+        public string OctValue
+        {
+            get
+            {
+                string number = m_display;
+                if (m_base != 10)
+                {
+                    number = ExpressionEvaluator.BaseKToBase10(number, m_base).ToString();
+                }
+                return ExpressionEvaluator.Base10ToBaseK(Convert.ToInt32(number), 8);
+            }
+        }
+
+        public string DecValue
+        {
+            get
+            {
+                string number = m_display;
+                if (m_base != 10)
+                {
+                    number = ExpressionEvaluator.BaseKToBase10(number, m_base).ToString();
+                }
+                return number;
+            }
+        }
+        public string BinValue
+        {
+            get
+            {
+                string number = m_display;
+                if (m_base != 10)
+                {
+                    number = ExpressionEvaluator.BaseKToBase10(number, m_base).ToString();
+                }
+                return ExpressionEvaluator.Base10ToBaseK(Convert.ToInt32(number), 2);
             }
         }
         public bool OperationOrder
@@ -114,9 +164,16 @@ namespace CalculatorApp
             get { return m_display; }
             set
             {
-                m_display = value;
-                OnPropertyChanged(nameof(DisplayText));
-                OnPropertyChanged(nameof(FormattedDisplayText)); 
+                if (m_display != value)
+                {
+                    m_display = value;
+                    OnPropertyChanged(nameof(DisplayText));
+                    OnPropertyChanged(nameof(HexValue));
+                    OnPropertyChanged(nameof(OctValue));
+                    OnPropertyChanged(nameof(DecValue));
+                    OnPropertyChanged(nameof(BinValue));
+                    OnPropertyChanged(nameof(FormattedDisplayText));
+                }
             }
         }
         public string SecondDisplayText
@@ -298,6 +355,7 @@ namespace CalculatorApp
             }
             else if (Mode == "Standard")
             {
+                m_base = 10;
                 KeyboardView = new StandardView();
             }
         }

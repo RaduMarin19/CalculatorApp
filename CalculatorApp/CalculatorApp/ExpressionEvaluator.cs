@@ -125,7 +125,7 @@ namespace CalculatorApp
                 _ => throw new InvalidOperationException($"Unknown unary operator: {op}")
             };
         }
-        private static int BaseKToBase10(string number, int baseK)
+        public static int BaseKToBase10(string number, int baseK)
         {
             int result = 0, power = 1;
             for (int i = number.Length - 1; i >= 0; i--)
@@ -140,7 +140,7 @@ namespace CalculatorApp
             return result;
         }
 
-        private static string Base10ToBaseK(int number, int baseK)
+        public static string Base10ToBaseK(int number, int baseK)
         {
             if (baseK < 2 || baseK > 36) throw new ArgumentException("Base must be between 2 and 36");
             if (number == 0) return "0";

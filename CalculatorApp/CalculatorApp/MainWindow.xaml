@@ -134,7 +134,7 @@
                 <Button Grid.Row="0" Grid.Column="3" Content="M-" Command="{Binding MemoryCommand}" CommandParameter="M-"/>
                 <Button Grid.Row="0" Grid.Column="4" Content="MS" Command="{Binding MemoryCommand}" CommandParameter="MS"/>
                 <Expander Grid.Row="0" Grid.Column="5" Name="M" 
-                          Header="Memory" HorizontalAlignment="Center"
+                          Header="M>" HorizontalAlignment="Center"
                           ExpandDirection="Down" IsExpanded="False" Width="Auto">
                     <ListBox ItemsSource="{Binding MemoryValues}" SelectedItem="{Binding SelectedMemoryValue, Mode=TwoWay}">
                         <ListBox.ItemTemplate>
