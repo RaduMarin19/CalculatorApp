@@ -19,7 +19,7 @@ namespace CalculatorApp
     /// <summary>
     /// Interaction logic for StandardView.xaml
     /// </summary>
-    public partial class StandardView : CalculatorKeyboard
+    public partial class StandardView : ICalculatorKeyboard
     {
         public StandardView()
         {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CalculatorApp
+namespace CalculatorApp.Views
 {
-    public class BaseConvertor
+    public interface ICalculatorKeyboard
     {
     }
 }

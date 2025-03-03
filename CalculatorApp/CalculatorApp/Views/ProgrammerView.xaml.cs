@@ -18,7 +18,7 @@ namespace CalculatorApp.Views
     /// <summary>
     /// Interaction logic for ProgrammerView.xaml
     /// </summary>
-    public partial class ProgrammerView : CalculatorKeyboard
+    public partial class ProgrammerView : ICalculatorKeyboard
     {
         public ProgrammerView()
         {

@@ -48,7 +48,7 @@ namespace CalculatorApp
             OnChangeBaseClick(m_base);
         }
         public ObservableCollection<double> MemoryValues => m_calculatorMemory.MemoryValues;
-        public CalculatorKeyboard KeyboardView
+        public ICalculatorKeyboard KeyboardView
         {
             get { return m_keyboardView; }
             set
@@ -454,7 +454,7 @@ namespace CalculatorApp
         public ICommand DigitGrouping {  get; set; }
 
         private CalculatorMemory m_calculatorMemory;
-        private CalculatorKeyboard m_keyboardView;
+        private ICalculatorKeyboard m_keyboardView;
         private string m_display;
         private string m_secondDisplay;
         private string m_expression;
